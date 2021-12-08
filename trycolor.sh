@@ -1,9 +1,17 @@
 #!/bin/bash
 
+# A quick and dirty script for providing a bit of color and contrast
+# in zfs-tests.sh output
+
 # We don't want while read LINE to eat our leading whitespace
 IFS=''
+if [[ "$(uname -s)" == "FreeBSD" ]]; then
+	SED=gsed
+else
+	SED=sed
+fi
 while read LINE; do
-	res=$(echo "${LINE}" | sed \
+	res=$(echo "${LINE}" | $SED \
 		-e s/'\] \[PASS\]$'/'\] \[\\e\[32mPASS\\e\[00m\]'/ \
 		-e s/'\] \[FAIL\]$'/'\] \[\\e\[1;91mFAIL\\e\[00m\]'/ \
 		-e s/'\] \[KILLED\]$'/'\] \[\\e\[1;101mKILLED\\e\[00m\]'/ \
